@@ -1,11 +1,11 @@
-FROM alpine:3.12 as build
+FROM alpine:3.17 as build
 ARG WRK2_COMMIT_HASH=44a94c17d8e6a0bac8559b53da76848e430cb7a7
 # Install deps and build from source
 RUN apk add --no-cache openssl-dev zlib-dev git make gcc musl-dev
 RUN git clone https://github.com/giltene/wrk2 && cd wrk2 && git checkout $WRK2_COMMIT_HASH && make
 
 
-FROM alpine:3.12
+FROM alpine:3.17
 # it seems libgcc_s.so is dynamically linked so we need to install libgcc
 RUN apk add --no-cache libgcc
 RUN adduser wrk_user -D -H
