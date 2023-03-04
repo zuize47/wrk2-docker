@@ -1,0 +1,39 @@
+name: wrk2-docker ci
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish-gpr:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      # Checkout the code
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      # Login to docker
+      # This can be used for both Docker Hub and
+      # GitHub container registry.
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          # Remove the following line if you want to
+          # login to docker hub.
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          # secrets are GitHub actions that can be added
+          # from settings of the repo.
+          password: ${{ secrets.CR_PAT }}
+      # Build the docker image and push it.
+      - name: Build image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          # Remove the `gchr.io/` if you're pushing to
+          # Docker Hub
+          tags: ghcr.io/zuize47/wrk2-docker:0.0.1
+     
